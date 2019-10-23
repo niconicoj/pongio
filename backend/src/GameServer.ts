@@ -12,9 +12,10 @@ export class GameServer {
 	private app: express.Application
 	private server: Server
 	private io: SocketIO.Server
-	private games: {[key: string]: Game}
+	private games: {[key: string]: Game} = {}
 
 	constructor() {
+		this.games = {}
 		this.initServer()
 		this.initSocket()
 		this.listen()
@@ -34,7 +35,7 @@ export class GameServer {
 	private listen(): void {
 		const server = this.server.listen(GameServer.PORT)
 		this.io.on('connection', (socket: SocketIO.Socket) => {
-			socket.on(Shared.Constants.MSG_TYPES.REQUEST_GAME, this.requestGame)
+			socket.on(Shared.Constants.MSG_TYPES.REQUEST_GAME, this.requestGame.bind(this))
 			socket.on(Shared.Constants.MSG_TYPES.INPUT, this.handleInput)
 			socket.on('disconnect', this.onDisconnect)
 		});
@@ -50,8 +51,10 @@ export class GameServer {
 		// if there currently is no game we just create one
 		if( Object.keys(this.games).length === 0 ) {
 			let gameName = Shared.Random.getRandomName()
+			console.log(gameName)
 			let game = new Game(gameName)
-			this.games = { ...this.games, gameName: game }
+			this.games[gameName] = game
+			console.log(this.games)
 			this.games[gameName].addPlayer(socket, username)
 		} else {
 			// we looking for a game with an open spot
@@ -68,7 +71,7 @@ export class GameServer {
 				let gameName = Shared.Random.getRandomName()
 				if(!this.games.hasOwnProperty(gameName)){
 					let game = new Game(gameName)
-					this.games = { ...this.games, gameName: game }
+					this.games[gameName] = game
 					this.games[gameName].addPlayer(socket, username)
 					return
 				}

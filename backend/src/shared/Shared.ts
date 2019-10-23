@@ -23,7 +23,7 @@ export module Shared {
 		},
 	})
 	export class Random {
-		private static readonly left:[
+		public static readonly left:Array<string> = [
 			"admiring", "adoring", "affectionate", "agitated", "amazing", "angry", "awesome", "beautiful", "blissful", "bold", "boring", "brave", "busy", "charming",
 			"clever", "cool", "compassionate", "competent", "condescending", "confident", "cranky", "crazy", "dazzling", "determined", "distracted", "dreamy", "eager",
 			"ecstatic", "elastic", "elated", "elegant", "eloquent", "epic", "exciting", "fervent", "festive", "flamboyant", "focused", "friendly", "frosty", "funny",
@@ -33,7 +33,7 @@ export module Shared {
 			"relaxed", "reverent", "romantic", "sad", "serene", "sharp", "silly", "sleepy", "stoic", "strange", "stupefied", "suspicious", "sweet", "tender", "thirsty",
 			"trusting", "unruffled", "upbeat", "vibrant", "vigilant", "vigorous", "wizardly", "wonderful", "xenodochial", "youthful", "zealous", "zen",
 		]
-		private static readonly right:[
+		public static readonly right:Array<string> = [
 			"albattani","allen","almeida","antonelli","agnesi","archimedes","ardinghelli","aryabhata","austin","babbage","banach","banzai","bardeen","bartik","bassi",
 			"beaver","bell","benz","bhabha","bhaskara","black","blackburn","blackwell","bohr","booth","borg","bose","bouman","boyd","brahmagupta","brattain","brown",
 			"buck","burnell","cannon","carson","cartwright","cerf","chandrasekhar","chaplygin","chatelet","chatterjee","chebyshev","cohen","chaum","clarke","colden",
@@ -52,7 +52,7 @@ export module Shared {
 			"williamson","wilson","wing","wozniak","wright","wu","yalow","yonath","zhukovsky",
 		]
 		public static getRandomName(retry: number = null): string {
-			let randomName = _.sample(this.left)+_.sample(this.right)
+			let randomName = _.sample(Random.left)+_.sample(Random.right)
 			if(retry){
 				randomName += _.random(retry)
 			}

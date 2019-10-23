@@ -12,7 +12,8 @@ export class Game {
     }
 
     public addPlayer(socket: SocketIO.Socket, username: string ){
-
+        console.log(socket)
+        console.log(username)
     }
 
     get isFull(): boolean {
