@@ -43,17 +43,22 @@ export class GameServer {
 	private onSocket(socket: SocketIO.Socket): void {
 		this.socket = socket
 		socket.on(Shared.Constants.MSG_TYPES.REQUEST_GAME, username => {this.socket = socket, this.requestGame(username)})
+		socket.on(Shared.Constants.MSG_TYPES.LEAVE_GAME, channel => {this.socket = socket, this.leaveGame(channel)})
 		socket.on(Shared.Constants.MSG_TYPES.INPUT, this.handleInput)
 		socket.on('disconnect', this.onDisconnect)
+	}
+
+	private leaveGame(channel: string): void {
+		this.games[channel].removePlayer(this.socket)
 	}
 
 	private requestGame(username: string): void {
 		// if there currently is no game we just create one
 		if( Object.keys(this.games).length === 0 ) {
-			let gameName = Shared.Random.getRandomName()
-			let game = new Game(gameName)
-			this.games[gameName] = game
-			this.games[gameName].addPlayer(this.socket, username)
+			let channel = Shared.Random.getRandomName()
+			let game = new Game(channel)
+			this.games[channel] = game
+			this.games[channel].addPlayer(this.socket, username)
 			console.log('created first game')
 			return
 		} else {
@@ -64,23 +69,20 @@ export class GameServer {
 					console.log('joined an existing game')
 					return true
 				}
-			}) === true ){
-				return
-			}
+			}) === true ){return}
 			// we create a game with a unique name
 			let retry = 0
 			let success = false
 			while(retry<10){
-				let gameName = Shared.Random.getRandomName()
-				if(!this.games.hasOwnProperty(gameName)){
-					let game = new Game(gameName)
-					this.games[gameName] = game
-					this.games[gameName].addPlayer(this.socket, username)
+				let channel = Shared.Random.getRandomName()
+				if(!this.games.hasOwnProperty(channel)){
+					let game = new Game(channel)
+					this.games[channel] = game
+					this.games[channel].addPlayer(this.socket, username)
 					console.log('created new game')
 					return
 				}
 			}
-			//if we get here it's fucked
 		}
 	}
 

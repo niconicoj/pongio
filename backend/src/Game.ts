@@ -14,6 +14,7 @@ export class Game {
         this.lastUpdateTime = Date.now()
         this.full = false
         this.players = {}
+        this.sockets = {}
     }
 
     public addPlayer( socket: SocketIO.Socket, username: string ): void {
@@ -24,6 +25,9 @@ export class Game {
         }
         this.players[socket.id] = new Player(socket.id, username, Shared.Constants.MAP_SIZE.X, Shared.Constants.MAP_SIZE.Y/2)
         this.sockets[socket.id] = socket
+        this.sockets[socket.id].join(this.channel)
+        this.sockets[socket.id].emit('HANDSHAKE','player '+this.players[socket.id].getUsername+' joined '+this.channel)
+        this.sockets[socket.id].to(this.channel).emit('WELCOME','player '+this.players[socket.id].getUsername+' joined '+this.channel)
         if( Object.keys(this.players).length >= 2){
             this.full = true
         } else {
@@ -32,6 +36,7 @@ export class Game {
     }
 
     removePlayer(socket: SocketIO.Socket): void {
+        this.sockets[socket.id].to(this.channel).emit('BYE','player '+this.players[socket.id].getUsername+' leaved the game')
         delete this.sockets[socket.id];
         delete this.players[socket.id];
         this.full = false

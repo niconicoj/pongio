@@ -19,6 +19,7 @@ export module Shared {
 		MSG_TYPES: {
 			REQUEST_GAME: 'request_game',
 			JOIN_GAME: 'join_game',
+			LEAVE_GAME: 'leave_game',
 			GAME_UPDATE: 'update',
 			INPUT: 'input',
 			GAME_OVER: 'dead',
@@ -54,7 +55,7 @@ export module Shared {
 			"williamson","wilson","wing","wozniak","wright","wu","yalow","yonath","zhukovsky",
 		]
 		public static getRandomName(retry: number = null): string {
-			let randomName = _.sample(Random.left)+_.sample(Random.right)
+			let randomName = _.sample(Random.left)+"_"+_.sample(Random.right)
 			if(retry){
 				randomName += _.random(retry)
 			}
