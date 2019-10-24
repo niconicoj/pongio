@@ -8,11 +8,12 @@ import { Game } from './Game'
 
 export class GameServer {
 
-	public static readonly PORT: number = 3000
+	public static readonly PORT: number = 8080
 	private app: express.Application
 	private server: Server
 	private io: SocketIO.Server
 	private games: {[key: string]: Game} = {}
+	private socket: SocketIO.Socket
 
 	constructor() {
 		this.games = {}
@@ -35,35 +36,37 @@ export class GameServer {
 	private listen(): void {
 		const server = this.server.listen(GameServer.PORT)
 		this.io.on('connection', (socket: SocketIO.Socket) => {
-			socket.on(Shared.Constants.MSG_TYPES.REQUEST_GAME, this.requestGame.bind(this))
-			socket.on(Shared.Constants.MSG_TYPES.INPUT, this.handleInput)
-			socket.on('disconnect', this.onDisconnect)
+			this.onSocket(socket)
 		});
 	}
 
-	private requestGame(socket: SocketIO.Socket, username: string): void {
-		// TODO make logic for joining game
-		// Step 1 : Receive player game request
-		// Step 2 : determine if we need to create a new game or if there is a game with an open spot
-		// Step 3 : if no game with empty spot are found, create a new one. if one is found, mark it as full.
-		// Step 4 : send player game channel id. we're done for now. the client should send a join request on the correct channel after that.
+	private onSocket(socket: SocketIO.Socket): void {
+		this.socket = socket
+		socket.on(Shared.Constants.MSG_TYPES.REQUEST_GAME, username => {this.socket = socket, this.requestGame(username)})
+		socket.on(Shared.Constants.MSG_TYPES.INPUT, this.handleInput)
+		socket.on('disconnect', this.onDisconnect)
+	}
 
+	private requestGame(username: string): void {
 		// if there currently is no game we just create one
 		if( Object.keys(this.games).length === 0 ) {
 			let gameName = Shared.Random.getRandomName()
-			console.log(gameName)
 			let game = new Game(gameName)
 			this.games[gameName] = game
-			console.log(this.games)
-			this.games[gameName].addPlayer(socket, username)
+			this.games[gameName].addPlayer(this.socket, username)
+			console.log('created first game')
+			return
 		} else {
 			// we looking for a game with an open spot
-			Object.keys(this.games).forEach(element => {
+			if(Object.keys(this.games).some(element => {
 				if(!this.games[element].isFull){
-					this.games[element].addPlayer(socket, username)
-					return
+					this.games[element].addPlayer(this.socket, username)
+					console.log('joined an existing game')
+					return true
 				}
-			});
+			}) === true ){
+				return
+			}
 			// we create a game with a unique name
 			let retry = 0
 			let success = false
@@ -72,7 +75,8 @@ export class GameServer {
 				if(!this.games.hasOwnProperty(gameName)){
 					let game = new Game(gameName)
 					this.games[gameName] = game
-					this.games[gameName].addPlayer(socket, username)
+					this.games[gameName].addPlayer(this.socket, username)
+					console.log('created new game')
 					return
 				}
 			}
