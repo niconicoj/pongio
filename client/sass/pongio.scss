@@ -1,0 +1,80 @@
+@charset "utf-8";
+
+// Import a Google Font
+@import url("https://fonts.googleapis.com/css?family=Rubik:400,700");
+
+// Set your brand colors
+$blue: rgb(2, 71, 158);
+$green: rgb(18, 151, 66);
+$purple: rgb(184, 9, 127);
+$red: rgb(214, 0, 55);
+$orange: rgb(221, 105, 4);
+$yellow: rgb(239, 187, 10);
+$pink: rgb(250, 124, 145);
+$grey: rgb(210, 213, 199);
+$light-grey: hsl(72, 20%, 93%);
+$dark: rgb(40, 40, 50);
+$darker: rgb(20, 20, 25);
+$black: rgb(0, 0, 0);
+$whiter: rgb(242, 242, 240);
+
+// Update Bulma's global variables
+$family-sans-serif: "Rubik", sans-serif;
+$grey-dark: $grey;
+$grey-light: $light-grey;
+$primary: $green;
+$link: $blue;
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+$text-strong: $light-grey;
+
+// Update some of Bulma's component variables
+$background: $dark;
+$scheme-main: $darker;
+$input-border-color: transparent;
+$input-shadow: none;
+$input-background-color: $dark;
+$modal-background-background-color: rgba($black, 0.6);
+$control-border-width: 2px;
+
+.spinner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  width: 25vw;
+  height: 25vw;
+  background-color: #333;
+
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1s infinite ease-in-out;
+  animation: sk-scaleout 1s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+// Import only what you need from Bulma
+@import "../node_modules/bulma/bulma.sass";

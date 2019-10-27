@@ -25,6 +25,10 @@ export module Shared {
 			INPUT: 'input',
 			GAME_OVER: 'dead',
 		},
+		ASSET_NAMES: [
+			'paddle.svg',
+			'ball.svg',
+		]
 	})
 	export class Random {
 		public static readonly left:Array<string> = [

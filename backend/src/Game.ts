@@ -35,7 +35,7 @@ export class Game {
         }
     }
 
-    removePlayer(socket: SocketIO.Socket): void {
+    public removePlayer(socket: SocketIO.Socket): void {
         this.sockets[socket.id].to(this.channel).emit('BYE','player '+this.players[socket.id].getUsername+' leaved the game')
         delete this.sockets[socket.id];
         delete this.players[socket.id];

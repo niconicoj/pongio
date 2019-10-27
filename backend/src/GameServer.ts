@@ -36,6 +36,7 @@ export class GameServer {
 	private listen(): void {
 		const server = this.server.listen(GameServer.PORT)
 		this.io.on('connection', (socket: SocketIO.Socket) => {
+			console.log('new connection')
 			this.onSocket(socket)
 		});
 	}
