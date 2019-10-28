@@ -6,12 +6,13 @@ import { Shared } from './shared/Shared'
 
 export class RenderEngine {
 
+    private static instance: RenderEngine
     private canvas: HTMLCanvasElement
     private context: CanvasRenderingContext2D
     private renderInt: number
 
     constructor() {
-        this.canvas = <HTMLCanvasElement> document.getElementById('game-canvas')
+        this.canvas = <HTMLCanvasElement>document.getElementById('game-canvas')
         this.canvas.classList.remove('is-hidden')
         this.context = this.canvas.getContext('2d')
         //window.addEventListener('resize', debounce(40, setCanvasDimensions))
@@ -21,7 +22,7 @@ export class RenderEngine {
 
 
 
-    setCanvasDimensions() {
+    public setCanvasDimensions(): void {
         // we just want the canvas to be at the correct height/width ratio 2:1
         let width = Math.min(window.innerWidth, window.innerHeight * 2)
         this.canvas.width = width
@@ -48,9 +49,18 @@ export class RenderEngine {
         //   // Draw all players
         //   renderPlayer(me, me);
         //   others.forEach(renderPlayer.bind(null, me));
+        this.renderPlayer({
+            direction: 0,
+            id: '123',
+            speed: 0, 
+            username: 'nico',
+            x:502,
+            y:128
+        })
     }
 
     renderBackground() {
+        this.context.fillStyle = '#282832'
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -59,6 +69,39 @@ export class RenderEngine {
         const x = Shared.Constants.MAP_SIZE.X
         const y = Shared.Constants.MAP_SIZE.Y
         this.renderBackground();
+    }
+
+    renderPlayer(player: { direction: number; id: string; speed: number; username: string; x:number; y:number}) {
+        let { x, y, direction } = player;
+        // const canvasX = canvas.width / 2 + x - me.x;
+        // const canvasY = canvas.height / 2 + y - me.y;
+
+        // // Draw ship
+        this.context.save();
+        // context.translate(canvasX, canvasY);
+        // context.rotate(direction);
+        this.context.drawImage(
+            Assets.getInstance().getAsset('ship.svg'),
+            x,
+            y
+        );
+        this.context.restore();
+
+        // // Draw health bar
+        // context.fillStyle = 'white';
+        // context.fillRect(
+        //     canvasX - PLAYER_RADIUS,
+        //     canvasY + PLAYER_RADIUS + 8,
+        //     PLAYER_RADIUS * 2,
+        //     2,
+        // );
+        // context.fillStyle = 'red';
+        // context.fillRect(
+        //     canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * player.hp / PLAYER_MAX_HP,
+        //     canvasY + PLAYER_RADIUS + 8,
+        //     PLAYER_RADIUS * 2 * (1 - player.hp / PLAYER_MAX_HP),
+        //     2,
+        // );
     }
 
     // // Replaces main menu rendering with game rendering.
@@ -72,44 +115,18 @@ export class RenderEngine {
         clearInterval(this.renderInt);
         this.renderInt = setInterval(this.renderMainMenu.bind(this), 1000 / 60);
     }
+
+    static getInstance() {
+        if (!RenderEngine.instance) {
+            RenderEngine.instance = new RenderEngine
+        }
+        return RenderEngine.instance
+    }
 }
 // Get the canvas graphics context
 
 // Renders a ship at the given coordinates
-// function renderPlayer(me, player) {
-//   const { x, y, direction } = player;
-//   const canvasX = canvas.width / 2 + x - me.x;
-//   const canvasY = canvas.height / 2 + y - me.y;
-
-//   // Draw ship
-//   context.save();
-//   context.translate(canvasX, canvasY);
-//   context.rotate(direction);
-//   context.drawImage(
-//     getAsset('ship.svg'),
-//     -PLAYER_RADIUS,
-//     -PLAYER_RADIUS,
-//     PLAYER_RADIUS * 2,
-//     PLAYER_RADIUS * 2,
-//   );
-//   context.restore();
-
-//   // Draw health bar
-//   context.fillStyle = 'white';
-//   context.fillRect(
-//     canvasX - PLAYER_RADIUS,
-//     canvasY + PLAYER_RADIUS + 8,
-//     PLAYER_RADIUS * 2,
-//     2,
-//   );
-//   context.fillStyle = 'red';
-//   context.fillRect(
-//     canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * player.hp / PLAYER_MAX_HP,
-//     canvasY + PLAYER_RADIUS + 8,
-//     PLAYER_RADIUS * 2 * (1 - player.hp / PLAYER_MAX_HP),
-//     2,
-//   );
-// }
+// function 
 
 // function renderBullet(me, bullet) {
 //   const { x, y } = bullet;

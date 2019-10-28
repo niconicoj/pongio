@@ -3,6 +3,7 @@ import { throttle } from 'throttle-debounce';
 
 import { Shared } from './shared/Shared'
 import { RenderEngine } from './RenderEngine';
+import { Input } from './input';
 
 export default class Networking {
 
@@ -38,7 +39,6 @@ export default class Networking {
     }
 
     play(username: string) {
-        console.log(this.socket.id)
         this.socket.emit(Shared.Constants.MSG_TYPES.REQUEST_GAME, username)
     }
 
@@ -49,8 +49,8 @@ export default class Networking {
     processCountDown(countDown: number): void {
         console.log(countDown)
         if(countDown === 0 ){
-            let renderEngine = new RenderEngine()
-            renderEngine.startRendering()
+            Input.getInstance().startCapturingInput()
+            RenderEngine.getInstance().startRendering()
         }
     }
 

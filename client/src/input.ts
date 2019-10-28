@@ -1,4 +1,34 @@
+import { RenderEngine } from "./RenderEngine";
+
 // import { updateDirection } from './networking';
+
+export class Input {
+
+    private static instance: Input
+
+    constructor() {
+        // this.startCapturingInput()
+    }
+
+    public startCapturingInput() {
+        window.addEventListener('resize', this.handleResize)
+      // window.addEventListener('mousemove', onMouseInput);
+      // window.addEventListener('click', onMouseInput);
+      // window.addEventListener('touchstart', onTouchInput);
+      // window.addEventListener('touchmove', onTouchInput);
+    }
+
+    handleResize(e: UIEvent) {
+        RenderEngine.getInstance().setCanvasDimensions()
+    }
+
+    static getInstance() {
+        if(!Input.instance){
+            Input.instance = new Input
+        }
+        return Input.instance
+    }
+}
 
 // function onMouseInput(e: MouseEvent) {
 //   handleInput(e.clientX, e.clientY);
@@ -15,10 +45,11 @@
 // }
 
 // export function startCapturingInput() {
-//   window.addEventListener('mousemove', onMouseInput);
-//   window.addEventListener('click', onMouseInput);
-//   window.addEventListener('touchstart', onTouchInput);
-//   window.addEventListener('touchmove', onTouchInput);
+//     window.addEventListener('resize', this.handleResize)
+//   // window.addEventListener('mousemove', onMouseInput);
+//   // window.addEventListener('click', onMouseInput);
+//   // window.addEventListener('touchstart', onTouchInput);
+//   // window.addEventListener('touchmove', onTouchInput);
 // }
 
 // export function stopCapturingInput() {
