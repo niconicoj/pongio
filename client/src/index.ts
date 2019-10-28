@@ -1,31 +1,24 @@
-// import { connect, play } from './networking';
-// import { startRendering, stopRendering } from './render';
-// import { startCapturingInput, stopCapturingInput } from './input';
 import Assets from './Assets';
 import Networking from './networking';
-// import { initState } from './state';
 
 const playMenu = document.getElementById('play-menu')
 const mainSpinner = document.getElementById('main-spinner')
 const playButton = document.getElementById('play-button');
 const usernameInput = <HTMLInputElement> document.getElementById('username-input');
-
+const spinnerMessage = document.getElementById('spinner-message')
 
 Promise.all([
     Assets.getInstance().downloadAssets(),
     Networking.getInstance().connect()
 ]).then(() => {
+    console.log('app initialized')
     playMenu.classList.add('is-active')
     mainSpinner.classList.add('is-hidden')
     //   usernameInput.focus();
     playButton.onclick = () => {
-        // Play!
+        playMenu.classList.remove('is-active')
+        mainSpinner.classList.remove('is-hidden')
+        spinnerMessage.innerHTML = "searching for a room..."
         Networking.getInstance().play(usernameInput.value)
-        // play(usernameInput.value);
-        // playMenu.classList.add('hidden');
-        // initState();
-        // startCapturingInput();
-        // startRendering();
-        // setLeaderboardHidden(false);
     };
 });

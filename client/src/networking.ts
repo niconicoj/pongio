@@ -1,8 +1,8 @@
 import * as io from 'socket.io-client';
 import { throttle } from 'throttle-debounce';
-//import { processGameUpdate } from './state';
 
 import { Shared } from './shared/Shared'
+import { RenderEngine } from './RenderEngine';
 
 export default class Networking {
 
@@ -25,7 +25,7 @@ export default class Networking {
         this.connectedPromise.then(() => {
             console.log('registered callback')
             this.socket.on(Shared.Constants.MSG_TYPES.JOIN_GAME, this.join)
-            // socket.on(Shared.Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
+            this.socket.on(Shared.Constants.MSG_TYPES.START_COUNTDOWN, this.processCountDown);
             // socket.on(Shared.Constants.MSG_TYPES.GAME_OVER, onGameOver);
             this.socket.on('disconnect', () => {
                 console.log('Disconnected from server.')
@@ -38,11 +38,20 @@ export default class Networking {
     }
 
     play(username: string) {
+        console.log(this.socket.id)
         this.socket.emit(Shared.Constants.MSG_TYPES.REQUEST_GAME, username)
     }
 
     join(channel: string) {
-        console.log('received room to join : '+channel)
+        console.log(channel)
+    }
+
+    processCountDown(countDown: number): void {
+        console.log(countDown)
+        if(countDown === 0 ){
+            let renderEngine = new RenderEngine()
+            renderEngine.startRendering()
+        }
     }
 
     updateDirection = throttle(20, dir => {

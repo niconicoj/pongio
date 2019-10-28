@@ -54,6 +54,11 @@ $control-border-width: 2px;
 .pg-text-dark {
   color: $dark-grey !important;
 }
+
+.pg-background-dark {
+  background-color: $dark;
+}
+
 .spinner {
   position: absolute;
   top: 0;

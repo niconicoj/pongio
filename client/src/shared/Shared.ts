@@ -21,6 +21,7 @@ export module Shared {
 			REQUEST_GAME: 'request_game',
 			JOIN_GAME: 'join_game',
 			LEAVE_GAME: 'leave_game',
+			START_COUNTDOWN: 'start_countdown',
 			GAME_UPDATE: 'update',
 			INPUT: 'input',
 			GAME_OVER: 'dead',

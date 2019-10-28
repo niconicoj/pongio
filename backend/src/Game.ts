@@ -1,5 +1,6 @@
 import{ Player } from './Player'
 import { Shared } from './shared/Shared'
+import { Networking } from './Networking';
 
 export class Game {
  
@@ -29,20 +30,33 @@ export class Game {
         this.players[socket.id] = new Player(socket.id, username, initalPosX, Shared.Constants.MAP_SIZE.Y/2)
         this.sockets[socket.id] = socket
         this.sockets[socket.id].join(this.channel)
-        this.sockets[socket.id].emit(Shared.Constants.MSG_TYPES.JOIN_GAME,this.channel)
-        this.sockets[socket.id].to(this.channel).emit('WELCOME','player '+this.players[socket.id].getUsername+' joined '+this.channel)
         if( Object.keys(this.players).length >= 2){
             this.full = true
+            Networking.getInstance().getIo.sockets.in(this.channel).emit(Shared.Constants.MSG_TYPES.JOIN_GAME,this.players)
+            this.startGame()
         } else {
             this.full = false
         }
     }
 
     public removePlayer(socket: SocketIO.Socket): void {
-        this.sockets[socket.id].to(this.channel).emit('BYE','player '+this.players[socket.id].getUsername+' leaved the game')
         delete this.sockets[socket.id];
         delete this.players[socket.id];
         this.full = false
+    }
+
+    private startGame(): void {
+        // we do a countdown and then properly start the game
+        let count = 3
+        let countDown = setInterval(() => {
+            Networking.getInstance().getIo.sockets.in(this.channel).emit(Shared.Constants.MSG_TYPES.START_COUNTDOWN,count)
+            count--
+        }, 1000)
+        setTimeout(() => {
+            clearInterval(countDown)
+            //setinterval update
+        }, 5000);
+        
     }
 
     private update(): void {
@@ -51,5 +65,13 @@ export class Game {
 
     get isFull(): boolean {
         return this.full
+    }
+
+    get getChannel(): string {
+        return this.channel
+    }
+
+    get getPlayers(): { [key: string]: Player } {
+        return this.players
     }
 }
