@@ -87,4 +87,4 @@ typings/
 # Added by me
 .DS_Store
 dist/
-!*/dist/index.html
+!*client/dist/index.html

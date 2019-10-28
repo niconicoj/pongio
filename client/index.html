@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pongio</title>
+    <link rel="stylesheet" href="css/pongio.css">
+</head>
+
+<body>
+    <canvas id="game-canvas" class="pg-fully-centered pg-background-dark is-hidden"></canvas>
+    <div id="play-menu" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div id="play-menu" class="columns">
+                    <div class="column pg-centered-col">
+                        <h1 class="title is-1 bd-notification">Pong.io</h1>
+                        <p class="subtitle is-4 bd-notification">
+                            Don't let the ball get in on your side.
+                            <br />
+                            Use your mouse to move the paddle.
+                        </p>
+                        <hr />
+                        <p class="bd-notification">
+                            This is a personal project made with Socket.io and Typescript.
+                        </p>
+                        <hr />
+                        <input class="input" type="text" id="username-input" placeholder="Username" />
+                        <a class="button is-primary is-large is-fullwidth bd-notification" style="margin-top: 20px;" id="play-button">PLAY</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main-spinner">
+        <div class="spinner"></div>
+        <div id="spinner-message" class="pg-text-dark subtitle is-5 pg-fully-centered">loading...</div>
+    </div>
+    <script src="./bundle.js"></script>
+</body>
+</html>
