@@ -21,9 +21,10 @@ export default class Networking {
         })
     }
 
-    connect(onGameOver: string) {
+    connect() {
         this.connectedPromise.then(() => {
-            // Register callbacks
+            console.log('registered callback')
+            this.socket.on(Shared.Constants.MSG_TYPES.JOIN_GAME, this.join)
             // socket.on(Shared.Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
             // socket.on(Shared.Constants.MSG_TYPES.GAME_OVER, onGameOver);
             this.socket.on('disconnect', () => {
@@ -37,7 +38,11 @@ export default class Networking {
     }
 
     play(username: string) {
-        this.socket.emit(Shared.Constants.MSG_TYPES.JOIN_GAME, username)
+        this.socket.emit(Shared.Constants.MSG_TYPES.REQUEST_GAME, username)
+    }
+
+    join(channel: string) {
+        console.log('received room to join : '+channel)
     }
 
     updateDirection = throttle(20, dir => {

@@ -54,6 +54,7 @@ export class GameServer {
 	}
 
 	private requestGame(username: string): void {
+		console.log('request received from '+username)
 		// if there currently is no game we just create one
 		if( Object.keys(this.games).length === 0 ) {
 			let channel = Shared.Random.getRandomName()

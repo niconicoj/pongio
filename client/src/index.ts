@@ -8,23 +8,24 @@ import Networking from './networking';
 const playMenu = document.getElementById('play-menu')
 const mainSpinner = document.getElementById('main-spinner')
 const playButton = document.getElementById('play-button');
-const usernameInput = document.getElementById('username-input');
+const usernameInput = <HTMLInputElement> document.getElementById('username-input');
 
 
 Promise.all([
-    Assets.getInstance().downloadAssets,
-    Networking.getInstance().connect
+    Assets.getInstance().downloadAssets(),
+    Networking.getInstance().connect()
 ]).then(() => {
     playMenu.classList.add('is-active')
     mainSpinner.classList.add('is-hidden')
     //   usernameInput.focus();
-    //   playButton.onclick = () => {
-    //     // Play!
-    //     play(usernameInput.value);
-    //     playMenu.classList.add('hidden');
-    //     initState();
-    //     startCapturingInput();
-    //     startRendering();
-    //     setLeaderboardHidden(false);
-    //   };
+    playButton.onclick = () => {
+        // Play!
+        Networking.getInstance().play(usernameInput.value)
+        // play(usernameInput.value);
+        // playMenu.classList.add('hidden');
+        // initState();
+        // startCapturingInput();
+        // startRendering();
+        // setLeaderboardHidden(false);
+    };
 });

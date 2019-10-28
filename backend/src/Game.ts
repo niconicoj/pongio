@@ -6,27 +6,30 @@ export class Game {
     private channel: string
     private sockets: { [key: string]: SocketIO.Socket }
     private players: { [key: string]: Player }
-    private full: boolean = false
+    private full: boolean
+    private shouldUpdate: boolean
     private lastUpdateTime: Number
 
     constructor( channel: string ) {
         this.channel = channel
-        this.lastUpdateTime = Date.now()
-        this.full = false
         this.players = {}
         this.sockets = {}
+        this.full = false
+        this.shouldUpdate = false
+        this.lastUpdateTime = Date.now()
     }
 
     public addPlayer( socket: SocketIO.Socket, username: string ): void {
-        if( Object.keys(this.players).length === 0){
-            let initalPosX = 10
+        let initalPosX = 0;
+        if( Object.keys(this.players).length === 0 ) {
+            initalPosX = 10
         } else {
-            let initalPosX = Shared.Constants.MAP_SIZE.X - 10
+            initalPosX = Shared.Constants.MAP_SIZE.X - 10
         }
-        this.players[socket.id] = new Player(socket.id, username, Shared.Constants.MAP_SIZE.X, Shared.Constants.MAP_SIZE.Y/2)
+        this.players[socket.id] = new Player(socket.id, username, initalPosX, Shared.Constants.MAP_SIZE.Y/2)
         this.sockets[socket.id] = socket
         this.sockets[socket.id].join(this.channel)
-        this.sockets[socket.id].emit('HANDSHAKE','player '+this.players[socket.id].getUsername+' joined '+this.channel)
+        this.sockets[socket.id].emit(Shared.Constants.MSG_TYPES.JOIN_GAME,this.channel)
         this.sockets[socket.id].to(this.channel).emit('WELCOME','player '+this.players[socket.id].getUsername+' joined '+this.channel)
         if( Object.keys(this.players).length >= 2){
             this.full = true

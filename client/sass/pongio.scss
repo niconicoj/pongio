@@ -13,7 +13,8 @@ $yellow: rgb(239, 187, 10);
 $pink: rgb(250, 124, 145);
 $grey: rgb(210, 213, 199);
 $light-grey: hsl(72, 20%, 93%);
-$dark: rgb(40, 40, 50);
+$dark-grey: #505060;
+$dark: #282832;
 $darker: rgb(20, 20, 25);
 $black: rgb(0, 0, 0);
 $whiter: rgb(242, 242, 240);
@@ -37,6 +38,22 @@ $input-background-color: $dark;
 $modal-background-background-color: rgba($black, 0.6);
 $control-border-width: 2px;
 
+.pg-centered-col {
+  flex-flow: column;
+  text-align: center;
+}
+
+.pg-fully-centered {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.pg-text-dark {
+  color: $dark-grey !important;
+}
 .spinner {
   position: absolute;
   top: 0;
@@ -47,7 +64,7 @@ $control-border-width: 2px;
 
   width: 25vw;
   height: 25vw;
-  background-color: #333;
+  background-color: #282832;
 
   border-radius: 100%;
   -webkit-animation: sk-scaleout 1s infinite ease-in-out;
