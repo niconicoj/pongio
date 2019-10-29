@@ -11,7 +11,6 @@ Promise.all([
     Assets.getInstance().downloadAssets(),
     Networking.getInstance().connect()
 ]).then(() => {
-    console.log('app initialized')
     playMenu.classList.add('is-active')
     mainSpinner.classList.add('is-hidden')
     //   usernameInput.focus();

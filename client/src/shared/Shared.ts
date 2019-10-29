@@ -7,15 +7,21 @@ export module Shared {
 		PLAYER_SPEED: 400,
 		PLAYER_FIRE_COOLDOWN: 0.25,
 		
-		BALL_RADIUS: 3,
-		BALL_SPEED: 800,
+		BALL_RADIUS: 25,
+		BALL_SPEED: 200,
+
+		PADDLE: {
+			HEIGHT: 200,
+			WIDTH: 20,
+			SPEED: 50
+		},
 		
 		SCORE_BULLET_HIT: 20,
 		SCORE_PER_SECOND: 1,
 		
 		MAP_SIZE: {
-			X: 512,
-			Y: 256,
+			X: 2000,
+			Y: 1000,
 		},
 		MSG_TYPES: {
 			REQUEST_GAME: 'request_game',
@@ -29,7 +35,8 @@ export module Shared {
 		ASSET_NAMES: [
 			'paddle.svg',
 			'ball.svg',
-		]
+		],
+		RENDER_DELAY: 100
 	})
 	export class Random {
 		public static readonly left:Array<string> = [

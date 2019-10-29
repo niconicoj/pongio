@@ -4,6 +4,8 @@ import { throttle } from 'throttle-debounce';
 import { Shared } from './shared/Shared'
 import { RenderEngine } from './RenderEngine';
 import { Input } from './input';
+import { Update } from './types';
+import { State } from './state';
 
 export default class Networking {
 
@@ -24,9 +26,9 @@ export default class Networking {
 
     connect() {
         this.connectedPromise.then(() => {
-            console.log('registered callback')
             this.socket.on(Shared.Constants.MSG_TYPES.JOIN_GAME, this.join)
             this.socket.on(Shared.Constants.MSG_TYPES.START_COUNTDOWN, this.processCountDown);
+            this.socket.on(Shared.Constants.MSG_TYPES.GAME_UPDATE, this.processGameUpdate);
             // socket.on(Shared.Constants.MSG_TYPES.GAME_OVER, onGameOver);
             this.socket.on('disconnect', () => {
                 console.log('Disconnected from server.')
@@ -46,9 +48,18 @@ export default class Networking {
         console.log(channel)
     }
 
+    processGameUpdate(update: Update){
+        console.log(update.ball)
+        State.getInstance().processGameUpdate(update)
+    }
+
     processCountDown(countDown: number): void {
-        console.log(countDown)
+        const mainSpinner = document.getElementById('main-spinner')
+        const spinnerMessage = document.getElementById('spinner-message')
+        spinnerMessage.innerHTML = "Game starts in <br>" + countDown
         if(countDown === 0 ){
+            mainSpinner.classList.add('is-hidden')
+            spinnerMessage.classList.add('is-hidden')
             Input.getInstance().startCapturingInput()
             RenderEngine.getInstance().startRendering()
         }

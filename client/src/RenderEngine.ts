@@ -3,6 +3,8 @@ import Assets from './Assets';
 //import { getCurrentState } from './state';
 
 import { Shared } from './shared/Shared'
+import { Player, Ball } from './types'
+import { State } from './state';
 
 export class RenderEngine {
 
@@ -10,6 +12,8 @@ export class RenderEngine {
     private canvas: HTMLCanvasElement
     private context: CanvasRenderingContext2D
     private renderInt: number
+    //since the game canvas is responsive we have a ratio to scale everything to the correct size
+    private scaleRatio: number
 
     constructor() {
         this.canvas = <HTMLCanvasElement>document.getElementById('game-canvas')
@@ -27,14 +31,14 @@ export class RenderEngine {
         let width = Math.min(window.innerWidth, window.innerHeight * 2)
         this.canvas.width = width
         this.canvas.height = width / 2
+        this.scaleRatio = width / Shared.Constants.MAP_SIZE.X
+
     }
 
     render() {
-        //   const { me, others, bullets } = getCurrentState();
-        //   if (!me) {
-        //     return;
-        //   }
+        let { players, ball } = State.getInstance().getCurrentState();
 
+        console.log(ball)
         // Draw background
         this.renderBackground()
 
@@ -46,17 +50,15 @@ export class RenderEngine {
         //   // Draw all bullets
         //   bullets.forEach(renderBullet.bind(null, me));
 
-        //   // Draw all players
-        //   renderPlayer(me, me);
-        //   others.forEach(renderPlayer.bind(null, me));
-        this.renderPlayer({
-            direction: 0,
-            id: '123',
-            speed: 0, 
-            username: 'nico',
-            x:502,
-            y:128
+        // render players
+        Object.keys(players).forEach(playerID => {
+            this.renderPlayer(players[playerID])
         })
+        // render ball
+
+        this.renderBAll(ball)
+
+
     }
 
     renderBackground() {
@@ -65,43 +67,35 @@ export class RenderEngine {
     }
 
     renderMainMenu() {
-        const t = Date.now() / 7500;
-        const x = Shared.Constants.MAP_SIZE.X
-        const y = Shared.Constants.MAP_SIZE.Y
         this.renderBackground();
     }
 
-    renderPlayer(player: { direction: number; id: string; speed: number; username: string; x:number; y:number}) {
-        let { x, y, direction } = player;
-        // const canvasX = canvas.width / 2 + x - me.x;
-        // const canvasY = canvas.height / 2 + y - me.y;
-
-        // // Draw ship
+    renderPlayer(player: Player) {
+        let { x, y } = player;
         this.context.save();
-        // context.translate(canvasX, canvasY);
-        // context.rotate(direction);
+        let centerX = (x - Shared.Constants.PADDLE.WIDTH / 2) * this.scaleRatio
+        let centerY = (y - Shared.Constants.PADDLE.HEIGHT / 2) * this.scaleRatio
         this.context.drawImage(
-            Assets.getInstance().getAsset('ship.svg'),
-            x,
-            y
+            Assets.getInstance().getAsset('paddle.svg'),
+            centerX,
+            centerY,
+            Shared.Constants.PADDLE.WIDTH * this.scaleRatio,
+            Shared.Constants.PADDLE.HEIGHT * this.scaleRatio
         );
         this.context.restore();
+    }
 
-        // // Draw health bar
-        // context.fillStyle = 'white';
-        // context.fillRect(
-        //     canvasX - PLAYER_RADIUS,
-        //     canvasY + PLAYER_RADIUS + 8,
-        //     PLAYER_RADIUS * 2,
-        //     2,
-        // );
-        // context.fillStyle = 'red';
-        // context.fillRect(
-        //     canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * player.hp / PLAYER_MAX_HP,
-        //     canvasY + PLAYER_RADIUS + 8,
-        //     PLAYER_RADIUS * 2 * (1 - player.hp / PLAYER_MAX_HP),
-        //     2,
-        // );
+    renderBAll(ball: Ball) {
+        const { x, y } = ball;
+        let centerX = (x - Shared.Constants.BALL_RADIUS / 2) * this.scaleRatio
+        let centerY = (y - Shared.Constants.BALL_RADIUS / 2) * this.scaleRatio
+        this.context.drawImage(
+            Assets.getInstance().getAsset('ball.svg'),
+            centerX,
+            centerY,
+            Shared.Constants.BALL_RADIUS * this.scaleRatio,
+            Shared.Constants.BALL_RADIUS * this.scaleRatio
+        );
     }
 
     // // Replaces main menu rendering with game rendering.

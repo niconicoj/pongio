@@ -14,7 +14,6 @@ export default class Assets {
         return new Promise(resolve => {
             const asset = new Image()
             asset.onload = () => {
-                console.log(`Downloaded ${assetName}`)
                 this.assets[assetName] = asset;
                 resolve()
             }
