@@ -36,7 +36,7 @@ export class Game {
         this.sockets[socket.id].join(this.channel)
         if (Object.keys(this.players).length >= 2) {
             this.full = true
-            // Networking.getInstance().getIo.sockets.in(this.channel).emit(Shared.Constants.MSG_TYPES.JOIN_GAME,this.players)
+            Networking.getInstance().getIo.sockets.in(this.channel).emit(Shared.Constants.MSG_TYPES.JOIN_GAME, this.channel)
             this.startGame()
         } else {
             this.full = false
@@ -54,7 +54,7 @@ export class Game {
         // we do a countdown and then properly start the game
         this.shouldUpdate = true
         this.updateHandle = setInterval(() => {
-            this.update() 
+            this.update()
         }, 1000 / 60)
         let count = 3
         let countDown = setInterval(() => {
@@ -84,6 +84,10 @@ export class Game {
 
         this.ball.update(dt)
 
+        // applying collisions between ball and paddle
+
+        this.applycollisions()
+
         // Send a game update to each player every other time
         if (this.shouldUpdate) {
             Object.keys(this.sockets).forEach(playerID => {
@@ -97,12 +101,44 @@ export class Game {
         }
     }
 
+    applycollisions() {
+        Object.keys(this.sockets).forEach(playerID => {
+            if (this.intersects(this.ball, this.players[playerID])) {
+                this.ball.setDirection(-this.ball.getDirection())
+            }
+        });
+    }
+
+    intersects(ball: Ball, player: Player): boolean {
+        let ballDistance = {
+            x: ball.distanceXTo(player),
+            y: ball.distanceYTo(player)
+        }
+
+        if (ballDistance.x > (Shared.Constants.PADDLE.WIDTH / 2 + Shared.Constants.BALL_RADIUS)) { return false; }
+        if (ballDistance.y > (Shared.Constants.PADDLE.HEIGHT / 2 + Shared.Constants.BALL_RADIUS)) { return false; }
+
+        if (ballDistance.x <= (Shared.Constants.PADDLE.WIDTH / 2)) { return true; }
+        if (ballDistance.y <= (Shared.Constants.PADDLE.HEIGHT / 2)) { return true; }
+
+        let cornerDistance_sq = (ballDistance.x - Shared.Constants.PADDLE.WIDTH / 2) ^ 2 +
+            (ballDistance.y - Shared.Constants.PADDLE.HEIGHT / 2) ^ 2;
+
+        return (cornerDistance_sq <= (Shared.Constants.BALL_RADIUS ^ 2));
+    }
+
     createUpdate() {
         return {
             t: Date.now(),
             ball: this.ball.serializeForUpdate(),
             players: this.players
         };
+    }
+
+    handleInput(socket: SocketIO.Socket, dir: number) {
+        if (this.players[socket.id]) {
+            this.players[socket.id].setDirection(dir);
+        }
     }
 
     get isFull(): boolean {

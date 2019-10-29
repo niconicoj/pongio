@@ -29,7 +29,7 @@ export class GameServer {
 			Networking.getInstance().socket = socket
 			Networking.getInstance().socket.on(Shared.Constants.MSG_TYPES.REQUEST_GAME, username => {Networking.getInstance().socket = socket, this.requestGame(username)})
 			Networking.getInstance().socket.on(Shared.Constants.MSG_TYPES.LEAVE_GAME, channel => {Networking.getInstance().socket = socket, this.leaveGame(channel)})
-			Networking.getInstance().socket.on(Shared.Constants.MSG_TYPES.INPUT, this.handleInput)
+			Networking.getInstance().socket.on(Shared.Constants.MSG_TYPES.INPUT, (input) => {Networking.getInstance().socket = socket, this.handleInput(input)})
 			Networking.getInstance().socket.on('disconnect', this.onDisconnect)
 		});
 	}
@@ -73,8 +73,9 @@ export class GameServer {
 		}
 	}
 
-	private handleInput(dir: InputEvent): void {
-		// TODO make logic for handling player input
+	private handleInput(input: {dir: number, channel: string}): void {
+		console.log(input)
+		this.games[input.channel].handleInput(Networking.getInstance().socket, input.dir)
 	}
 
 	private onDisconnect(): void {

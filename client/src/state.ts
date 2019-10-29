@@ -2,7 +2,7 @@
 // This makes gameplay smoother and lag less noticeable.
 
 import { Shared } from './shared/Shared'
-import { Player, Update } from './types'
+import { Player, Update, ObjectType } from './types'
 
 export class State {
 
@@ -67,29 +67,27 @@ export class State {
             const ratio = (serverTime - baseUpdate.t) / (next.t - baseUpdate.t);
             return {
                 players: baseUpdate.players,
-                ball: baseUpdate.ball,
+                ball: this.interpolateObject(baseUpdate.ball, next.ball,ratio)
             };
         }
     }
 
-    interpolateObject(object1: { [x: string]: number; }, object2: { [x: string]: number; }, ratio: number) {
+    interpolateObject(object1: ObjectType, object2: ObjectType, ratio: number) {
         if (!object2) {
             return object1;
         }
 
-        const interpolated = {};
+        let interpolated = <ObjectType>{};
         Object.keys(object1).forEach(key => {
             if (key === 'direction') {
                 interpolated[key] = this.interpolateDirection(object1[key], object2[key], ratio);
             } else {
-                interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio;
+                if (this.hasKey(object1, key)) {
+                    interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio;
+                }
             }
         });
         return interpolated;
-    }
-
-    interpolateObjectArray(objects1: { map: (arg0: (o: any) => any) => void; }, objects2: { find: (arg0: (o2: any) => boolean) => void; }, ratio: any) {
-        return objects1.map((o: { id: any; }) => this.interpolateObject(o, objects2.find((o2: { id: any; }) => o.id === o2.id), ratio));
     }
 
     // Determines the best way to rotate (cw or ccw) when interpolating a direction.
@@ -108,6 +106,10 @@ export class State {
             // Normal interp
             return d1 + (d2 - d1) * ratio;
         }
+    }
+
+    hasKey<O>(obj: O, key: keyof any): key is keyof O {
+        return key in obj
     }
 
 

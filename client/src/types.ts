@@ -19,3 +19,10 @@ export type Update = {
     ball: Ball
     t: number
 }
+
+export type ObjectType = {
+    direction: number;
+    speed: number;
+    x: number;
+    y: number;
+}

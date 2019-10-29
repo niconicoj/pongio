@@ -13,12 +13,20 @@ export class Ball extends ObjectClass {
             // flipping an angle around Y axis is equivalent to reflecting around the X axis ( minus theta ) and then rotating 180° ( plus PI )
             // should rember that reflecting around X axis is just minus theta
             this.direction = Math.PI-this.direction 
+            this.y = Math.max(
+                Math.min(this.y, Shared.Constants.MAP_SIZE.Y - Shared.Constants.BALL_RADIUS / 2),
+                0
+            )
         }
 
         if( this.x <= ( 0 + Shared.Constants.BALL_RADIUS / 2 ) || this.x >= ( Shared.Constants.MAP_SIZE.X - Shared.Constants.BALL_RADIUS / 2 ) ) {
             // flipping an angle around Y axis is equivalent to reflecting around the X axis ( minus theta ) and then rotating 180° ( plus PI )
             // should rember that reflecting around X axis is just minus theta
             this.direction = -this.direction 
+            this.x = Math.max(
+                Math.min(this.x, Shared.Constants.MAP_SIZE.X - Shared.Constants.BALL_RADIUS / 2),
+                0
+            )
         }
         // update position accordingly
         super.update(dt);

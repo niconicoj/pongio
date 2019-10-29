@@ -11,6 +11,7 @@ export default class Networking {
 
     private static instance: Networking
     private socket: SocketIOClient.Socket
+    private channel: string
     private connectedPromise: Promise<unknown>
 
     private constructor() {
@@ -26,7 +27,7 @@ export default class Networking {
 
     connect() {
         this.connectedPromise.then(() => {
-            this.socket.on(Shared.Constants.MSG_TYPES.JOIN_GAME, this.join)
+            this.socket.on(Shared.Constants.MSG_TYPES.JOIN_GAME, (channel: string) => {this.socket, this.join(channel)})
             this.socket.on(Shared.Constants.MSG_TYPES.START_COUNTDOWN, this.processCountDown);
             this.socket.on(Shared.Constants.MSG_TYPES.GAME_UPDATE, this.processGameUpdate);
             // socket.on(Shared.Constants.MSG_TYPES.GAME_OVER, onGameOver);
@@ -45,11 +46,12 @@ export default class Networking {
     }
 
     join(channel: string) {
-        console.log(channel)
+        console.log(this)
+        this.channel = channel
+        console.log(this.channel)
     }
 
     processGameUpdate(update: Update){
-        console.log(update.ball)
         State.getInstance().processGameUpdate(update)
     }
 
@@ -65,14 +67,19 @@ export default class Networking {
         }
     }
 
-    updateDirection = throttle(20, dir => {
-        this.socket.emit(Shared.Constants.MSG_TYPES.INPUT, dir);
-    });
+    public updateDirection = throttle(20, (dir, channel) => {
+        console.log(this)
+        this.socket.emit(Shared.Constants.MSG_TYPES.INPUT, {dir: dir, channel: channel})
+    })
 
     static getInstance() {
         if(!Networking.instance){
             Networking.instance = new Networking
         }
         return Networking.instance
+    }
+
+    get getChannel(): string {
+        return this.channel
     }
 }

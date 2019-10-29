@@ -37,8 +37,6 @@ export class RenderEngine {
 
     render() {
         let { players, ball } = State.getInstance().getCurrentState();
-
-        console.log(ball)
         // Draw background
         this.renderBackground()
 
@@ -56,7 +54,7 @@ export class RenderEngine {
         })
         // render ball
 
-        this.renderBAll(ball)
+        this.renderBall(ball)
 
 
     }
@@ -85,7 +83,7 @@ export class RenderEngine {
         this.context.restore();
     }
 
-    renderBAll(ball: Ball) {
+    renderBall(ball: Ball) {
         const { x, y } = ball;
         let centerX = (x - Shared.Constants.BALL_RADIUS / 2) * this.scaleRatio
         let centerY = (y - Shared.Constants.BALL_RADIUS / 2) * this.scaleRatio
