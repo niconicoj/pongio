@@ -46,9 +46,7 @@ export default class Networking {
     }
 
     join(channel: string) {
-        console.log(this)
         this.channel = channel
-        console.log(this.channel)
     }
 
     processGameUpdate(update: Update){
@@ -68,7 +66,6 @@ export default class Networking {
     }
 
     public updateDirection = throttle(20, (dir, channel) => {
-        console.log(this)
         this.socket.emit(Shared.Constants.MSG_TYPES.INPUT, {dir: dir, channel: channel})
     })
 
