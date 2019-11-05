@@ -65,6 +65,10 @@ export class Game {
             clearInterval(countDown)
             this.shouldUpdate = true
             this.ball = new Ball(1000, 500, Math.random() * 2 * Math.PI, Shared.Constants.BALL_SPEED)
+            Object.keys(this.sockets).forEach(playerID => {
+                this.players[playerID].setSpeed(Shared.Constants.PADDLE.SPEED)
+            });
+
         }, 4010);
 
     }
@@ -101,10 +105,13 @@ export class Game {
         }
     }
 
+    // should also set the ball direction to an angle relative to the players paddle
     applycollisions() {
         Object.keys(this.sockets).forEach(playerID => {
             if (this.intersects(this.ball, this.players[playerID])) {
-                this.ball.setDirection(-this.ball.getDirection())
+                let deltaY = this.ball.distanceYTo(this.players[playerID])
+                let deltaX = this.ball.distanceXTo(this.players[playerID])
+                this.ball.setDirection(Math.atan2(deltaY,deltaX))
             }
         });
     }

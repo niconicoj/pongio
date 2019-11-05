@@ -13,7 +13,7 @@ export class RenderEngine {
     private context: CanvasRenderingContext2D
     private renderInt: number
     //since the game canvas is responsive we have a ratio to scale everything to the correct size
-    private scaleRatio: number
+    private static scaleRatio: number
 
     constructor() {
         this.canvas = <HTMLCanvasElement>document.getElementById('game-canvas')
@@ -31,7 +31,7 @@ export class RenderEngine {
         let width = Math.min(window.innerWidth, window.innerHeight * 2)
         this.canvas.width = width
         this.canvas.height = width / 2
-        this.scaleRatio = width / Shared.Constants.MAP_SIZE.X
+        RenderEngine.scaleRatio = width / Shared.Constants.MAP_SIZE.X
 
     }
 
@@ -71,28 +71,28 @@ export class RenderEngine {
     renderPlayer(player: Player) {
         let { x, y } = player;
         this.context.save();
-        let centerX = (x - Shared.Constants.PADDLE.WIDTH / 2) * this.scaleRatio
-        let centerY = (y - Shared.Constants.PADDLE.HEIGHT / 2) * this.scaleRatio
+        let centerX = (x - Shared.Constants.PADDLE.WIDTH / 2) * RenderEngine.scaleRatio
+        let centerY = (y - Shared.Constants.PADDLE.HEIGHT / 2) * RenderEngine.scaleRatio
         this.context.drawImage(
             Assets.getInstance().getAsset('paddle.svg'),
             centerX,
             centerY,
-            Shared.Constants.PADDLE.WIDTH * this.scaleRatio,
-            Shared.Constants.PADDLE.HEIGHT * this.scaleRatio
+            Shared.Constants.PADDLE.WIDTH * RenderEngine.scaleRatio,
+            Shared.Constants.PADDLE.HEIGHT * RenderEngine.scaleRatio
         );
         this.context.restore();
     }
 
     renderBall(ball: Ball) {
         const { x, y } = ball;
-        let centerX = (x - Shared.Constants.BALL_RADIUS / 2) * this.scaleRatio
-        let centerY = (y - Shared.Constants.BALL_RADIUS / 2) * this.scaleRatio
+        let centerX = (x - Shared.Constants.BALL_RADIUS / 2) * RenderEngine.scaleRatio
+        let centerY = (y - Shared.Constants.BALL_RADIUS / 2) * RenderEngine.scaleRatio
         this.context.drawImage(
             Assets.getInstance().getAsset('ball.svg'),
             centerX,
             centerY,
-            Shared.Constants.BALL_RADIUS * this.scaleRatio,
-            Shared.Constants.BALL_RADIUS * this.scaleRatio
+            Shared.Constants.BALL_RADIUS * RenderEngine.scaleRatio,
+            Shared.Constants.BALL_RADIUS * RenderEngine.scaleRatio
         );
     }
 
@@ -113,6 +113,10 @@ export class RenderEngine {
             RenderEngine.instance = new RenderEngine
         }
         return RenderEngine.instance
+    }
+
+    static getScaleRatio(): number {
+        return RenderEngine.scaleRatio
     }
 }
 // Get the canvas graphics context

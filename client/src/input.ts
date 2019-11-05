@@ -1,5 +1,6 @@
 import { RenderEngine } from "./RenderEngine";
 import Networking from "./networking";
+import { State } from "./state";
 
 // import { updateDirection } from './networking';
 
@@ -30,9 +31,10 @@ export class Input {
         var rect = this.canvas.getBoundingClientRect()
         let  canvasX = x - rect.left
         let  canvasY = y - rect.top
-        console.log('mouse x : ',canvasX - rect.width / 2)
-        console.log('mouse y : ',rect.height / 2 - canvasY)
-        const dir = Math.atan2(canvasX - rect.width / 2, canvasY + rect.height / 2 )
+        let myID = Networking.getInstance().getSocketId
+        let me = State.getInstance().getStoredState.players[myID]
+        let scaleRatio = RenderEngine.getScaleRatio()
+        const dir = Math.atan2( canvasX - me.x*scaleRatio, canvasY - me.y*scaleRatio )
         Networking.getInstance().updateDirection(dir, Networking.getInstance().getChannel)
     }
 

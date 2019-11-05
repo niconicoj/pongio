@@ -8,12 +8,12 @@ export module Shared {
 		PLAYER_FIRE_COOLDOWN: 0.25,
 		
 		BALL_RADIUS: 25,
-		BALL_SPEED: 400,
+		BALL_SPEED: 800,
 
 		PADDLE: {
 			HEIGHT: 200,
 			WIDTH: 20,
-			SPEED: 50
+			SPEED: 400
 		},
 		
 		SCORE_BULLET_HIT: 20,

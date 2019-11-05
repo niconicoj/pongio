@@ -2,7 +2,7 @@
 // This makes gameplay smoother and lag less noticeable.
 
 import { Shared } from './shared/Shared'
-import { Player, Update, ObjectType } from './types'
+import { Player, Update, ObjectType, StateObject } from './types'
 
 export class State {
 
@@ -10,6 +10,7 @@ export class State {
     private gameUpdates: Array<Update>
     private gameStart = 0
     private firstServerTimestamp = 0
+    private state: StateObject
 
     private constructor() {
         this.initState()
@@ -49,9 +50,9 @@ export class State {
         return this.firstServerTimestamp + (Date.now() - this.gameStart) - Shared.Constants.RENDER_DELAY;
     }
 
-    getCurrentState() {
+    getCurrentState(): StateObject {
         if (!this.firstServerTimestamp) {
-            return {};
+            return <StateObject> {};
         }
 
         const base = this.getBaseUpdate();
@@ -65,11 +66,16 @@ export class State {
             const baseUpdate = this.gameUpdates[base];
             const next = this.gameUpdates[base + 1];
             const ratio = (serverTime - baseUpdate.t) / (next.t - baseUpdate.t);
-            return {
+            this.state = {
                 players: baseUpdate.players,
                 ball: this.interpolateObject(baseUpdate.ball, next.ball,ratio)
-            };
+            }
+            return this.state
         }
+    }
+
+    get getStoredState(): StateObject {
+        return this.state
     }
 
     interpolateObject(object1: ObjectType, object2: ObjectType, ratio: number) {

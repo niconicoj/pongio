@@ -40,6 +40,10 @@ export class ObjectClass {
     public getDirection(): number {
         return this.direction
     }
+
+    public setSpeed(speed: number) {
+        this.speed = speed
+    }
   
     serializeForUpdate() {
         return {

@@ -6,7 +6,7 @@ export class Player extends ObjectClass {
     private username: string
 
     constructor(id: string, username: string, x: number, y: number) {
-        super(id, x, y, 0, 10)
+        super(id, x, y, 0, 0)
         this.username = username
     }
 

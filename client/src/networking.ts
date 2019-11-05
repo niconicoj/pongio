@@ -79,4 +79,8 @@ export default class Networking {
     get getChannel(): string {
         return this.channel
     }
+
+    get getSocketId(): string {
+        return this.socket.id
+    }
 }

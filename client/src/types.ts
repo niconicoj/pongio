@@ -26,3 +26,10 @@ export type ObjectType = {
     x: number;
     y: number;
 }
+
+export type StateObject = {
+    players: {
+        [key: string]: Player;
+    };
+    ball: ObjectType;
+}
