@@ -20,7 +20,7 @@
     "@types/socket.io": "^2.1.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "shortid": "^2.2.15",
     "socket.io": "^2.2.0",
     "typescript": "^3.4.5"
